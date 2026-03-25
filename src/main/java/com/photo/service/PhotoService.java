@@ -18,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class PhotoService {
 
             Path targetPath = Paths.get(config.photosSystemDir())
                     .toAbsolutePath()
-                    .resolve(photo.getFolderName())
+                    .resolve(LocalDate.now().toString())
                     .resolve(photo.getName());
 
             try {

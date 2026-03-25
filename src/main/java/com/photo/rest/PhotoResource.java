@@ -6,6 +6,7 @@ import com.photo.model.FindAllPhotosDTO;
 import com.photo.model.Outcome;
 import com.photo.model.Photo;
 import com.photo.model.PhotoUploadForm;
+import com.photo.model.user.User;
 import com.photo.response.PhotoResponse;
 import com.photo.service.PhotoService;
 import com.photo.utils.FileUtils;
@@ -15,6 +16,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.bouncycastle.crypto.generators.BCrypt;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
@@ -35,9 +37,11 @@ public class PhotoResource {
     @RunOnVirtualThread
     public Response upload(@RestForm("file") List<FileUpload> files,
                            @RestForm("sourceType") String sourceType,
-                           @RestForm("folder") String folderName) {
+                           @RestForm("userId") String userId) {
 
         Log.infof("Received upload photo request");
+
+        User user = User.findById(userId);
 
         if(files.size() > config.maxUploadNumber()) {
             return Response.serverError().entity("Puoi caricare al massimo 10 foto alla volta").build();
@@ -49,7 +53,7 @@ public class PhotoResource {
 
         try {
 
-            uploadedPhotos = FileUtils.getRawData(files, tempPath, sourceType, folderName);
+            uploadedPhotos = FileUtils.getRawData(files, tempPath, sourceType, user);
 
         } catch (MimeTypeNotSupportedException e) {
             Log.errorf(e.getMessage());

@@ -1,6 +1,7 @@
 package com.photo.utils;
 
 import com.photo.model.PhotoUploadForm;
+import com.photo.model.user.User;
 import io.quarkus.logging.Log;
 
 import java.io.File;
@@ -15,9 +16,9 @@ public class PhotoUtils {
                                                        String checksum,
                                                        String createdAt,
                                                        String uploadedAt,
-                                                       String folderName) {
+                                                       User user) {
         try {
-            return new PhotoUploadForm(uploadedFile, sourceType, fileName, mimeType, size, checksum, createdAt, uploadedAt, folderName);
+            return new PhotoUploadForm(uploadedFile, sourceType, fileName, mimeType, size, checksum, createdAt, uploadedAt, user);
         } catch (Exception e) {
             Log.infof("Error creating uploaded photo object for file: %s - %s", uploadedFile.getName(), e.getMessage());
             throw new RuntimeException(e);

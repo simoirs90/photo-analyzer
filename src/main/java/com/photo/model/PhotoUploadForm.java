@@ -1,6 +1,7 @@
 package com.photo.model;
 
 import com.drew.lang.annotations.NotNull;
+import com.photo.model.user.User;
 import lombok.*;
 import org.jboss.resteasy.reactive.RestForm;
 
@@ -25,5 +26,5 @@ public class PhotoUploadForm {
     private String checksum;
     private String createdAt;
     private String uploadedAt;
-    private String folderName;
+    private User user;
 }

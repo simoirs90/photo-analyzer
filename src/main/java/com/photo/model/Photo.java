@@ -1,7 +1,10 @@
 package com.photo.model;
 
+import com.photo.model.user.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -21,5 +24,7 @@ public class Photo extends PanacheEntity {
     private String storagePath;
     private String sizeMB;
     private String checksum;
-    private String folderName;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

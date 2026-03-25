@@ -25,7 +25,7 @@ public class PhotoEntityMapper {
         photo.setCreatedAt(uploadedPhoto.getCreatedAt());
         photo.setUploadedAt(String.valueOf(LocalDateTime.now()));
         photo.setStoragePath(config.photosSystemDir());
-        photo.setFolderName(uploadedPhoto.getFolderName());
+        photo.setUser(uploadedPhoto.getUser());
 
         Log.infof("Created photo: %s", photo.toString());
 

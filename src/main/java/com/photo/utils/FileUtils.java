@@ -5,6 +5,7 @@ import com.photo.model.ArchiveFormats;
 import com.photo.model.ExtractedFile;
 import com.photo.model.PhotoFormats;
 import com.photo.model.PhotoUploadForm;
+import com.photo.model.user.User;
 import io.quarkus.logging.Log;
 import org.apache.tika.Tika;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +28,7 @@ public class FileUtils {
     public static List<PhotoUploadForm> getRawData(List<FileUpload> files,
                                                    String tempPath,
                                                    String sourceType,
-                                                   String folderName) {
+                                                   User user) {
 
         List<PhotoUploadForm> uploadedPhotos = new ArrayList<>();
         List<File> tempFiles = new ArrayList<>();
@@ -75,8 +77,8 @@ public class FileUtils {
                                 extractedFile.getSize(),
                                 FileUtils.calculateChecksum(extractedFile.getFile()),
                                 null,
-                                null,
-                                folderName);
+                                OffsetDateTime.now().toString(),
+                                user);
 
                         Log.infof("Extracted raw data: %s", rawData.toString());
 
@@ -86,8 +88,8 @@ public class FileUtils {
 
                 PhotoUploadForm rawData = PhotoUtils.uploadedPhotoCreator(
                         uploadedFile, sourceType, fileName, mimeType,
-                        size, FileUtils.calculateChecksum(uploadedFile), null, null,
-                        folderName);
+                        size, FileUtils.calculateChecksum(uploadedFile),
+                        null, OffsetDateTime.now().toString(), user);
 
                 Log.infof("Extracted raw data: %s", rawData.toString());
 
