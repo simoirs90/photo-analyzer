@@ -1,6 +1,7 @@
 package com.photo.rest;
 
 import com.photo.model.user.User;
+import com.photo.security.LoginRequest;
 import com.photo.security.PasswordHasher;
 import com.photo.security.SignupRequest;
 import io.quarkus.logging.Log;
@@ -10,6 +11,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 
 @Path("/users")
 public class UserResource {
@@ -34,5 +36,30 @@ public class UserResource {
         user.persist();
 
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response login(LoginRequest loginRequest) {
+        Log.infof("Login request: %s", loginRequest);
+
+        User user = User.find("username", loginRequest.getUsername()).firstResult();
+
+        if (user == null) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Utente non trovato")
+                    .build();
+        }
+        
+        boolean correctPassword = PasswordHasher.checkPassword(loginRequest.getPassword(), user.getPassword());
+
+        if (!correctPassword) {
+            return Response.status(Response.Status.UNAUTHORIZED).
+                    entity("La password non è corretta")
+                    .build();
+        }
+
+        return Response.ok(user).build();
     }
 }
