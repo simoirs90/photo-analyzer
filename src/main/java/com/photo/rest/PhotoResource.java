@@ -34,23 +34,26 @@ public class PhotoResource {
     @POST
     @Path("/upload")
     @RunOnVirtualThread
-    public Response upload(@RestForm("file") List<FileUpload> files,
+    public Response upload(@RestForm("files") List<FileUpload> files,
                            @RestForm("userId") String userId) {
 
-        Log.infof("Received upload photo request");
+        Log.infof("Received upload photo request of %s files with userId %s", files.size(), userId);
 
-        User user = User.findById(userId);
+        if(files.isEmpty()) {
+            return Response.serverError().entity("Zero foto caricate").build();
+        }
 
         if(files.size() > config.maxUploadNumber()) {
             return Response.serverError().entity("Puoi caricare al massimo 10 foto alla volta").build();
         }
+
+        User user = User.findById(userId);
 
         String tempPath = config.downloadDir();
 
         List<PhotoUploadForm> uploadedPhotos = new ArrayList<>();
 
         try {
-
             uploadedPhotos = FileUtils.getRawData(files, tempPath, user);
 
         } catch (MimeTypeNotSupportedException e) {

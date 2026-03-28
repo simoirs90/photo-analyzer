@@ -34,6 +34,8 @@ public class FileUtils {
 
         for(FileUpload file : files) {
 
+            Log.infof("Extracting raw data of file: %s", file.uploadedFile());
+
             File uploadedFile = file.uploadedFile().toFile();
             String fileName = file.fileName();
             String size = String.valueOf(uploadedFile.length());

@@ -44,9 +44,11 @@ public class UserResource {
     public Response login(LoginRequest loginRequest) {
         Log.infof("Login request: %s", loginRequest);
 
-        User user = User.find("username", loginRequest.getUsername()).firstResult();
+        User user = User.find("name", loginRequest.getUsername()).firstResult();
 
         if (user == null) {
+            Log.infof("User not found: %s", loginRequest.toString());
+
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("Utente non trovato")
                     .build();
