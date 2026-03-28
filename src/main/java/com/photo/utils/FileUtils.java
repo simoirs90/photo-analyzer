@@ -27,7 +27,6 @@ public class FileUtils {
 
     public static List<PhotoUploadForm> getRawData(List<FileUpload> files,
                                                    String tempPath,
-                                                   String sourceType,
                                                    User user) {
 
         List<PhotoUploadForm> uploadedPhotos = new ArrayList<>();
@@ -71,7 +70,6 @@ public class FileUtils {
 
                         PhotoUploadForm rawData = PhotoUtils.uploadedPhotoCreator(
                                 extractedFile.getFile(),
-                                sourceType,
                                 extractedFile.getFileName(),
                                 extractedFile.getMimeType(),
                                 extractedFile.getSize(),
@@ -87,7 +85,7 @@ public class FileUtils {
                 }
 
                 PhotoUploadForm rawData = PhotoUtils.uploadedPhotoCreator(
-                        uploadedFile, sourceType, fileName, mimeType,
+                        uploadedFile, fileName, mimeType,
                         size, FileUtils.calculateChecksum(uploadedFile),
                         null, OffsetDateTime.now().toString(), user);
 

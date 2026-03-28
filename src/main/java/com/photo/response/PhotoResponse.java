@@ -10,11 +10,6 @@ import lombok.*;
 public class PhotoResponse {
 
     private FindAllPhotosDTO metadata;
-    private Photo singlePhotoMetadata;
-
-    public PhotoResponse(Photo singlePhotoMetadata) {
-        this.singlePhotoMetadata = singlePhotoMetadata;
-    }
 
     public PhotoResponse(FindAllPhotosDTO metadata) {
         this.metadata = metadata;

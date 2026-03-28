@@ -17,9 +17,6 @@ public class PhotoUploadForm {
     @RestForm("file")
     @NotNull
     private File file;
-    @RestForm
-    @NotNull
-    private String sourceType;
     private String name;
     private String mimeType;
     private String size;

@@ -16,7 +16,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.bouncycastle.crypto.generators.BCrypt;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
@@ -36,7 +35,6 @@ public class PhotoResource {
     @Path("/upload")
     @RunOnVirtualThread
     public Response upload(@RestForm("file") List<FileUpload> files,
-                           @RestForm("sourceType") String sourceType,
                            @RestForm("userId") String userId) {
 
         Log.infof("Received upload photo request");
@@ -53,7 +51,7 @@ public class PhotoResource {
 
         try {
 
-            uploadedPhotos = FileUtils.getRawData(files, tempPath, sourceType, user);
+            uploadedPhotos = FileUtils.getRawData(files, tempPath, user);
 
         } catch (MimeTypeNotSupportedException e) {
             Log.errorf(e.getMessage());
