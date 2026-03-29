@@ -110,25 +110,34 @@ public class PhotoResource {
     @GET
     @Path("/{id}")
     @RunOnVirtualThread
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getPhoto(@PathParam("id") long id) {
+    public Response getPhoto(@PathParam("id") long id,
+                             @QueryParam("userId") Long userId) {
 
-        Log.infof("Received get photo request");
+        Log.infof("Received get photo request by user ", userId);
 
         Photo photo = photoService.findById(id);
 
         if (photo == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Photo not found with id %s" + id).build();
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Photo not found with id " + id)
+                    .build();
+        }
+
+        if (!photo.getUser().id.equals(userId)) {
+            Log.infof("Wrong user for photo %s", photo.toString());
+            return Response.status(403).build();
         }
 
         File file = new File(photo.getStoragePath());
 
+        if (!file.exists()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         Log.infof("Returning binary content from %s", file.getAbsolutePath());
 
-        return Response.ok()
+        return Response.ok(file, photo.getMimeType())
                 .header("Content-Disposition", "inline; filename=\"" + file.getName() + "\"")
-                .header("Content-Length", file.length())
-                .entity(file)
                 .build();
     }
 
