@@ -7,6 +7,7 @@ import com.photo.model.Outcome;
 import com.photo.model.Photo;
 import com.photo.model.PhotoUploadForm;
 import com.photo.model.user.User;
+import com.photo.repository.UserRepository;
 import com.photo.response.PhotoResponse;
 import com.photo.service.PhotoService;
 import com.photo.utils.FileUtils;
@@ -29,6 +30,8 @@ public class PhotoResource {
     @Inject
     AppConfig config;
     @Inject
+    UserRepository userRepository;
+    @Inject
     PhotoService photoService;
 
     @POST
@@ -47,7 +50,7 @@ public class PhotoResource {
             return Response.serverError().entity("Puoi caricare al massimo 10 foto alla volta").build();
         }
 
-        User user = User.findById(userId);
+        User user = userRepository.findById(Long.parseLong(userId));
 
         String tempPath = config.downloadDir();
 
@@ -65,7 +68,7 @@ public class PhotoResource {
 
         Map<String, Outcome> outcomes = new HashMap<>();
 
-        outcomes = photoService.analyzeAndPersistPhotos(uploadedPhotos);
+        outcomes = photoService.analyzeAndPersistPhotos(uploadedPhotos, user.getName());
 
         List<String> notPersistedPhotos = outcomes.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(Outcome.FAILURE))

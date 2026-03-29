@@ -33,7 +33,7 @@ public class PhotoService {
     @Inject
     AppConfig config;
 
-    public Map<String, Outcome> analyzeAndPersistPhotos(List<PhotoUploadForm> rawPhotoData) {
+    public Map<String, Outcome> analyzeAndPersistPhotos(List<PhotoUploadForm> rawPhotoData, String username) {
         Log.infof("Starting photo analysis");
 
         Map<Photo, File> photoFiles = new HashMap<>();
@@ -45,10 +45,10 @@ public class PhotoService {
         });
 
         Log.infof("Analysis ended, persisting photo");
-        return persist(photoFiles);
+        return persist(photoFiles, username);
     }
 
-    private Map<String, Outcome> persist(Map<Photo, File> photoFiles) {
+    private Map<String, Outcome> persist(Map<Photo, File> photoFiles, String username) {
         Log.infof("Persisting photos");
 
         Map<String, Outcome> outcomes = new HashMap<>();
@@ -57,6 +57,7 @@ public class PhotoService {
 
             Path targetPath = Paths.get(config.photosSystemDir())
                     .toAbsolutePath()
+                    .resolve(username)
                     .resolve(LocalDate.now().toString())
                     .resolve(photo.getName());
 
