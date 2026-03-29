@@ -91,18 +91,21 @@ public class PhotoResource {
     @Path("/all")
     @RunOnVirtualThread
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllPhotos(@QueryParam("page") @DefaultValue("0") int page,
+    public Response getAllPhotos(@QueryParam("userId") String userId,
+                                 @QueryParam("page") @DefaultValue("0") int page,
                                  @QueryParam("size") @DefaultValue("10") int size) {
 
-        Log.infof("Received get all photos request");
+        Log.infof("Received get all photos request for user: %s", userId);
 
-        FindAllPhotosDTO photosDTO = photoService.getAllPhotos(page, size);
+        FindAllPhotosDTO photosDTO = photoService.getAllPhotos(page, size, Integer.parseInt(userId));
 
         if (photosDTO == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("No photos found").build();
         }
 
         PhotoResponse photoResponse = new PhotoResponse(photosDTO);
+
+        Log.infof("Sending response: %s", photoResponse.toString());
 
         return Response.ok().entity(photoResponse).build();
     }

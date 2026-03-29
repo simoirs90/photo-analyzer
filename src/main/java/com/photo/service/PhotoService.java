@@ -86,9 +86,9 @@ public class PhotoService {
         return outcomes;
     }
 
-    public FindAllPhotosDTO getAllPhotos(int page, int size) {
-        Log.infof("Getting all photos");
-        return new FindAllPhotosDTO(photoRepository.getAllPhotos(page, size), page, size);
+    public FindAllPhotosDTO getAllPhotos(int page, int size, int userId) {
+        Log.infof("Getting all photos for id %s", userId);
+        return new FindAllPhotosDTO(photoRepository.getAllPhotos(page, size, userId), page, size);
     }
 
     public Photo findById(long id) {

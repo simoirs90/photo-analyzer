@@ -36,10 +36,9 @@ public class PhotoRepository implements PanacheRepository<Photo> {
         }
     }
 
-    public List<Photo> getAllPhotos(int page, int size) {
+    public List<Photo> getAllPhotos(int page, int size, int userId) {
         try {
-            return Photo.findAll()
-                    .page(Page.of(page, size))
+            return Photo.find("user.id = ?1", userId)
                     .list();
         } catch (Exception e) {
             Log.infof("Error getting photos metadata from DB: %s", e.getMessage());
